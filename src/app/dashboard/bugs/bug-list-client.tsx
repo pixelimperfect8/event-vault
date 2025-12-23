@@ -5,13 +5,14 @@ import { Card, CardContent, CardHeader, Button } from "@/components/ui-component
 import { Bug, Clock, User, Hash, CheckCircle2, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { resolveBug } from "./actions"
+import { Bug as BugType } from "@/lib/types"
 
 interface BugListClientProps {
-    bugs: any[]
+    bugs: BugType[]
 }
 
 export function BugListClient({ bugs: initialBugs }: BugListClientProps) {
-    const [bugs, setBugs] = useState(initialBugs)
+    const [bugs, setBugs] = useState<BugType[]>(initialBugs)
     const [resolving, setResolving] = useState<string | null>(null)
     const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'FIXED'>('ALL')
 
@@ -52,7 +53,7 @@ export function BugListClient({ bugs: initialBugs }: BugListClientProps) {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {filteredBugs.map((bug: any) => (
+                {filteredBugs.map((bug) => (
                     <Card
                         key={bug.id}
                         className={cn(
@@ -135,7 +136,7 @@ export function BugListClient({ bugs: initialBugs }: BugListClientProps) {
                                     </div>
                                     <p className="text-[10px] font-bold text-indigo-500 uppercase mb-1 tracking-wider">Element Context</p>
                                     <p className="text-xs text-indigo-900 italic font-semibold truncate leading-relaxed">
-                                        "{bug.element_text}"
+                                        &quot;{bug.element_text}&quot;
                                     </p>
                                 </div>
                             )}

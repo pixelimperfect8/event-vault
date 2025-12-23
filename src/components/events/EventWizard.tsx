@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect } from "react"
-import { Button, Card, CardContent, CardHeader, CardTitle, CardDescription, Label, Input, Select, Textarea } from "@/components/ui-components"
-import { ChevronRight, ChevronLeft, Check, Calendar, MapPin, Settings, AlertCircle, Loader2 } from "lucide-react"
+import { useState } from "react"
+import { Button, Card, CardContent, CardHeader, CardTitle, CardDescription, Label, Input, Select } from "@/components/ui-components"
+import { ChevronRight, ChevronLeft, Check, Settings, AlertCircle, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { createEvent, saveEventDraft } from "@/app/dashboard/events/actions"
 import { EVENT_TEMPLATES } from "@/lib/templates"
@@ -29,11 +29,12 @@ export function EventWizard({ onClose }: EventWizardProps) {
         venueName: "",
         venueAddress: "",
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        timezone_offset: new Date().getTimezoneOffset(),
         templateId: "blank",
-        vendors: [] as any[],
+        vendors: [] as unknown[],
     })
 
-    const updateField = (field: string, value: any) => {
+    const updateField = (field: string, value: unknown) => {
         setFormData(prev => ({ ...prev, [field]: value }))
         if (errors[field]) {
             setErrors(prev => {
@@ -147,7 +148,7 @@ export function EventWizard({ onClose }: EventWizardProps) {
                                     <Select
                                         id="type"
                                         value={formData.type}
-                                        onChange={e => updateField("type", e.target.value)}
+                                        onChange={e => updateField("type", (e.target as HTMLSelectElement).value)}
                                     >
                                         <option value="Wedding">Wedding</option>
                                         <option value="Corporate">Corporate</option>
@@ -162,7 +163,7 @@ export function EventWizard({ onClose }: EventWizardProps) {
                                     <Select
                                         id="status"
                                         value={formData.status}
-                                        onChange={e => updateField("status", e.target.value)}
+                                        onChange={e => updateField("status", (e.target as HTMLSelectElement).value)}
                                     >
                                         <option value="PLANNING">Planning</option>
                                         <option value="ACTIVE">Active / On-Site</option>
@@ -243,7 +244,7 @@ export function EventWizard({ onClose }: EventWizardProps) {
                                 <Select
                                     id="template"
                                     value={formData.templateId}
-                                    onChange={e => updateField("templateId", e.target.value)}
+                                    onChange={e => updateField("templateId", (e.target as HTMLSelectElement).value)}
                                 >
                                     {EVENT_TEMPLATES.map(t => (
                                         <option key={t.id} value={t.id}>{t.name}</option>
@@ -272,7 +273,7 @@ export function EventWizard({ onClose }: EventWizardProps) {
                                     <div>
                                         <h4 className="text-sm font-semibold text-indigo-900">Automation Enabled</h4>
                                         <p className="text-xs text-indigo-700 mt-1">
-                                            We'll automatically set up your event dashboard and prepare your contract tracking table.
+                                            We&apos;ll automatically set up your event dashboard and prepare your contract tracking table.
                                         </p>
                                     </div>
                                 </div>

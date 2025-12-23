@@ -2,8 +2,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { db } from "@/lib/db-client"
 import { redirect } from "next/navigation"
-import { Palette, Type, Layout, Component, Box } from "lucide-react"
-import { Card, CardContent, CardHeader } from "@/components/ui-components"
+import { Box } from "lucide-react"
 import { DesignSystemClient } from "./design-system-client"
 
 export default async function DesignSystemPage() {

@@ -25,9 +25,21 @@ export interface Event {
     venueName?: string | null;
     venueAddress?: string | null;
     timezone: string;
-    sections?: any[] | null;
+    sections: any[]; // eslint-disable-line @typescript-eslint/no-explicit-any
     createdAt: string;
     updatedAt: string;
+    role?: string; // For client-side role passing
+}
+
+export interface Bug {
+    id: string;
+    reporter_id: string;
+    element_selector: string;
+    element_text?: string | null;
+    description: string;
+    status: 'PENDING' | 'FIXED';
+    created_at: string;
+    updated_at: string;
 }
 
 export interface Contract {

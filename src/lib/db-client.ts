@@ -8,13 +8,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
 const supabase = createClient(supabaseUrl, supabaseKey)
 
-// Helper to ensure we return matching types
-function mapUser(data: any): User { // eslint-disable-line @typescript-eslint/no-explicit-any
-    return {
-        ...data,
-        // Ensure optional fields are handled if missing
-    }
-}
+
 
 class SupabaseClient {
     public user = {
@@ -96,7 +90,7 @@ class SupabaseClient {
             if (error) return null
             return data as Event
         },
-        create: async ({ data }: { data: any }) => {
+        create: async ({ data }: { data: any }) => { // eslint-disable-line @typescript-eslint/no-explicit-any
             const { data: newEvent, error } = await supabase
                 .from('events')
                 .insert({
@@ -134,7 +128,7 @@ class SupabaseClient {
             if (error) return []
             return data as Contract[]
         },
-        create: async ({ data }: { data: any }) => {
+        create: async ({ data }: { data: any }) => { // eslint-disable-line @typescript-eslint/no-explicit-any
             const { data: newContract, error } = await supabase
                 .from('contracts')
                 .insert({
@@ -176,7 +170,7 @@ class SupabaseClient {
             }
             return newBug
         },
-        update: async ({ where, data }: { where: { id: string }, data: any }) => {
+        update: async ({ where, data }: { where: { id: string }, data: any }) => { // eslint-disable-line @typescript-eslint/no-explicit-any
             const { data: updatedBug, error } = await supabase
                 .from('bugs')
                 .update({

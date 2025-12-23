@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle, Input } from "@/components/ui-components"
 import { Check, ArrowRight } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -16,7 +15,6 @@ const STORAGE_METHODS = [
 ]
 
 export default function OnboardingPage() {
-    const router = useRouter()
     const [step, setStep] = useState(1)
     const [selectedPlans, setSelectedPlans] = useState<string[]>([])
     const [selectedStorage, setSelectedStorage] = useState<string[]>([])

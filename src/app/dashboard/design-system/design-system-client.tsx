@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Palette, Type, Layout, Component, ChevronRight, Copy, Check, Box } from "lucide-react"
+import { Palette, Type, Component, Copy, Check, Box } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button, Input, Card, CardHeader, CardContent, Label, Select, Textarea } from "@/components/ui-components"
 
@@ -169,7 +169,7 @@ export function DesignSystemClient() {
                                     </CardHeader>
                                     <CardContent>
                                         <p className="text-sm text-slate-700 leading-relaxed italic border-l-4 border-indigo-500 pl-4">
-                                            "Design is not just what it looks like and feels like. Design is how it works."
+                                            &quot;Design is not just what it looks like and feels like. Design is how it works.&quot;
                                         </p>
                                     </CardContent>
                                 </Card>
@@ -185,7 +185,7 @@ export function DesignSystemClient() {
                         <div className="relative z-10 max-w-xl space-y-4">
                             <h3 className="text-2xl font-black">AI Auto-Registry</h3>
                             <p className="text-indigo-100 font-medium leading-relaxed">
-                                I've established an automated workflow. Every time I create or modify a component in the `src/components` directory, I will automatically documentation it here.
+                                I&apos;ve established an automated workflow. Every time I create or modify a component in the `src/components` directory, I will automatically document it here.
                             </p>
                         </div>
                     </div>

@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useRef } from "react"
 import { Button, Card, CardHeader, CardTitle, CardContent, Label, Textarea } from "@/components/ui-components"
-import { Bug, X, MousePointer2, Crosshair, Loader2, CheckCircle2 } from "lucide-react"
+import { Bug, X, Crosshair, Loader2, CheckCircle2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { logBug } from "@/app/dashboard/bugs/actions"
 
@@ -45,7 +45,7 @@ export function BugCaptureTool() {
         }) : null)
     }
 
-    const handleMouseUp = (e: React.MouseEvent) => {
+    const handleMouseUp = () => {
         if (!isSelecting || !selection) return
         setIsSelecting(false)
 
@@ -93,25 +93,23 @@ export function BugCaptureTool() {
                 setSelection(null)
                 setDescription("")
             }, 3000)
-        } catch (err: any) {
-            console.error("Bug Capture Tool Error:", err)
-            // Handle Next.js server action error objects
-            let message = "Failed to log bug. Please try again."
-            if (typeof err === 'string') message = err
-            else if (err.message) message = err.message
-            else if (typeof err === 'object') {
-                try {
-                    message = err.message || JSON.stringify(err, (key, value) =>
-                        typeof value === 'object' && value !== null ? value : value
-                        , 2)
-                    // If it's just a digest/anonymized error, try to be more descriptive
-                    if (message.includes('digest')) {
-                        message = "Server Error: The database might be out of sync. Please try refreshing or check the console."
-                    }
-                } catch {
-                    message = "An unexpected error occurred"
+        } catch (err: unknown) {
+            const error = err as Error
+            console.error("Bug report failed:", error)
+
+            // Extract a user-friendly message
+            let message = "Something went wrong while reporting the bug."
+            if (error.message) {
+                if (error.message.includes("403") || error.message.includes("Unauthorized")) {
+                    message = "You don't have permission to report bugs (App Master only)."
+                } else if (error.message.includes("reporter_id")) {
+                    message = "User session error. Please try logging in again."
+                } else {
+                    message = error.message
                 }
             }
+
+            // Using existing state variables for error handling
             setError(message)
         } finally {
             setLoading(false)
@@ -190,10 +188,10 @@ export function BugCaptureTool() {
                                         <span className="font-bold text-slate-400">Selector:</span> {selectedElement?.selector}
                                     </div>
                                     <div className="space-y-2">
-                                        <Label htmlFor="bug-desc">What's wrong?</Label>
+                                        <Label htmlFor="bug-desc">What&apos;s wrong?</Label>
                                         <Textarea
                                             id="bug-desc"
-                                            placeholder="e.g. This button is misaligned on mobile, or the color doesn't match the design."
+                                            placeholder="e.g. This button is misaligned on mobile, or the color doesn&apos;t match the design."
                                             value={description}
                                             onChange={(e) => setDescription(e.target.value)}
                                             rows={4}

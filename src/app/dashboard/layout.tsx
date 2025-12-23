@@ -5,6 +5,7 @@ import { Sidebar } from "@/components/sidebar"
 import { redirect } from "next/navigation"
 import { BugCaptureTool } from "@/components/app-master/BugCaptureTool"
 import { MobileHeader } from "@/components/mobile-header"
+import { Bug as BugType } from "@/lib/types"
 
 export default async function DashboardLayout({
     children,
@@ -35,7 +36,7 @@ export default async function DashboardLayout({
     let pendingBugCount = 0
     if (isAppMaster) {
         const bugs = await db.bug.findMany({ where: {} })
-        pendingBugCount = bugs.filter((b: any) => b.status === 'PENDING').length
+        pendingBugCount = (bugs as BugType[]).filter(b => b.status === 'PENDING').length
     }
 
     return (

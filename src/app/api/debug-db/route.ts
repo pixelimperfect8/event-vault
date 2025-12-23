@@ -39,11 +39,12 @@ export async function GET(request: Request) {
 
         return NextResponse.json({ status: "Success", user: updated })
 
-    } catch (e: any) {
+    } catch (e: unknown) {
+        const error = e as Error
         return NextResponse.json({
             error: "Exception thrown",
-            details: e.message,
-            stack: e.stack
+            details: error.message,
+            stack: error.stack
         }, { status: 500 })
     }
 }

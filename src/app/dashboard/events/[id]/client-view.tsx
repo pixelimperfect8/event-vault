@@ -2,17 +2,16 @@
 
 import { useState } from "react"
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui-components"
-import { FileText, Upload, MoreVertical, Calendar as CalendarIcon, MapPin, User, Check, Bug } from "lucide-react"
+import { FileText, Upload, MoreVertical, Calendar as CalendarIcon, MapPin, User, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Event, Contract } from "@/lib/types"
 
 interface EventClientViewProps {
     event: Event
     contracts: Contract[]
-    activity: any[]
 }
 
-export function EventClientView({ event, contracts, activity }: EventClientViewProps) {
+export function EventClientView({ event, contracts }: EventClientViewProps) {
     const [activeTab, setActiveTab] = useState("contracts")
 
     return (
@@ -87,9 +86,9 @@ export function EventClientView({ event, contracts, activity }: EventClientViewP
                                 </CardHeader>
                                 <CardContent>
                                     <div className="text-3xl font-bold">
-                                        {event.sections?.reduce((acc: number, s: any) => acc + s.tasks.filter((t: any) => t.completed).length, 0) || 0}
+                                        {event.sections?.reduce((acc: number, s: { tasks: { completed: boolean }[] }) => acc + s.tasks.filter(t => t.completed).length, 0) || 0}
                                         <span className="text-sm text-slate-400 font-normal ml-2">
-                                            / {event.sections?.reduce((acc: number, s: any) => acc + s.tasks.length, 0) || 0}
+                                            / {event.sections?.reduce((acc: number, s: { tasks: { completed: boolean }[] }) => acc + s.tasks.length, 0) || 0}
                                         </span>
                                     </div>
                                 </CardContent>
@@ -97,14 +96,14 @@ export function EventClientView({ event, contracts, activity }: EventClientViewP
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {event.sections?.map((section: any, idx: number) => (
+                            {event.sections?.map((section: { title: string, tasks: { title: string, completed: boolean }[] }, idx: number) => (
                                 <Card key={idx}>
                                     <CardHeader className="pb-3 border-b border-slate-50 bg-slate-50/30">
                                         <CardTitle className="text-base font-semibold text-slate-900">{section.title}</CardTitle>
                                     </CardHeader>
                                     <CardContent className="pt-4 px-0">
                                         <div className="space-y-1">
-                                            {section.tasks.map((task: any, tIdx: number) => (
+                                            {(section.tasks as { title: string, completed: boolean }[]).map((task, tIdx: number) => (
                                                 <div key={tIdx} className="flex items-center gap-3 px-6 py-2 hover:bg-slate-50/80 transition-colors group">
                                                     <div className={cn(
                                                         "h-4 w-4 rounded-md border flex items-center justify-center transition-colors",

@@ -13,12 +13,10 @@ export async function logBug(data: {
     const session = await getServerSession(authOptions)
     console.log("[DEBUG] logBug session:", !!session, "User:", session?.user?.email)
 
-    // @ts-ignore
     if (!session?.user || session.user.role !== 'APP_MASTER') {
         throw new Error("Unauthorized: Only App Masters can log bugs")
     }
 
-    // @ts-ignore
     const userId = session.user.id
 
     // Log to DB
@@ -42,8 +40,7 @@ export async function logBug(data: {
 
 export async function resolveBug(bugId: string) {
     const session = await getServerSession(authOptions)
-    // @ts-ignore
-    if (!session?.user || (session.user as any).role !== 'APP_MASTER') {
+    if (!session?.user || session.user.role !== 'APP_MASTER') {
         throw new Error("Unauthorized")
     }
 

@@ -9,9 +9,11 @@ import { cn } from "@/lib/utils"
 import { signOut } from "next-auth/react"
 import { EventWizard } from "./events/EventWizard"
 
+import { User, Event as EventType } from "@/lib/types"
+
 interface MobileHeaderProps {
-    user: any
-    events: any[]
+    user: User
+    events: EventType[]
     pendingBugCount?: number
 }
 

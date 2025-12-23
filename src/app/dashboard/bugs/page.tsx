@@ -2,9 +2,9 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { db } from "@/lib/db-client"
 import { redirect } from "next/navigation"
-import { Card, CardContent, CardHeader } from "@/components/ui-components"
-import { Bug, Clock, User, Hash, CheckCircle2 } from "lucide-react"
+import { Bug } from "lucide-react"
 import { BugListClient } from "./bug-list-client"
+import { Bug as BugType } from "@/lib/types"
 
 export default async function BugsPage() {
     const session = await getServerSession(authOptions)
@@ -18,10 +18,10 @@ export default async function BugsPage() {
         redirect("/dashboard")
     }
 
-    const bugs = await db.bug.findMany({ where: {} })
+    const bugs = await db.bug.findMany({ where: {} }) as BugType[]
 
     // Sort bugs by newest first
-    const sortedBugs = [...bugs].sort((a: any, b: any) =>
+    const sortedBugs = [...bugs].sort((a, b) =>
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     )
 
@@ -37,7 +37,7 @@ export default async function BugsPage() {
                 </div>
                 <div className="flex items-center gap-4">
                     <div className="text-right hidden sm:block">
-                        <p className="text-sm font-bold text-slate-900">{sortedBugs.filter((b: any) => b.status === 'PENDING').length} Pending</p>
+                        <p className="text-sm font-bold text-slate-900">{sortedBugs.filter((b: BugType) => b.status === 'PENDING').length} Pending</p>
                         <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Active Queue</p>
                     </div>
                     <div className="bg-red-50 text-red-700 px-4 py-2 rounded-full text-xs font-bold border border-red-100 flex items-center gap-2">

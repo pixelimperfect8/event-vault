@@ -1,5 +1,24 @@
+import { NextAuthOptions, DefaultSession } from "next-auth"
+import { DefaultJWT } from "next-auth/jwt"
 
-import { NextAuthOptions } from "next-auth"
+declare module "next-auth" {
+    interface Session {
+        user: {
+            id: string
+            role: string
+        } & DefaultSession["user"]
+    }
+
+    interface User {
+        role?: string
+    }
+}
+
+declare module "next-auth/jwt" {
+    interface JWT extends DefaultJWT {
+        role?: string
+    }
+}
 import CredentialsProvider from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 import { db } from "@/lib/db-client"
@@ -50,7 +69,7 @@ export const authOptions: NextAuthOptions = {
         signIn: '/login',
     },
     callbacks: {
-        async signIn({ user, account, profile }) {
+        async signIn({ user, account }) {
             if (account?.provider === "google") {
                 if (!user.email) return false
 
@@ -77,10 +96,8 @@ export const authOptions: NextAuthOptions = {
         },
         async session({ session, token }) {
             if (session.user && token.sub) {
-                // @ts-ignore
                 session.user.id = token.sub
-                // @ts-ignore
-                session.user.role = token.role
+                session.user.role = token.role as string
             }
             return session
         },
@@ -98,7 +115,6 @@ export const authOptions: NextAuthOptions = {
                         }
                     } else {
                         token.sub = user.id
-                        // @ts-ignore
                         token.role = user.role
                     }
                 }
