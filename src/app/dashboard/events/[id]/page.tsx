@@ -28,10 +28,10 @@ export default async function EventPage({ params }: PageProps) {
     const contracts = await db.contract.findMany({ where: { eventId: event.id } })
     // Activity log is not yet in DB, passing empty or mock for now if needed, or update DB schema. 
     // Let's pass empty for now to be strictly real.
-    const activity: any[] = []
+    const activity: any[] = [] // eslint-disable-line @typescript-eslint/no-explicit-any
 
     return <EventClientView
-        event={{ ...event, role: user.role } as any}
+        event={{ ...event, role: user.role } as any} // eslint-disable-line @typescript-eslint/no-explicit-any
         contracts={contracts}
         activity={activity}
     />

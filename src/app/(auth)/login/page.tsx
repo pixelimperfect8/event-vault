@@ -2,12 +2,11 @@
 
 import { useState } from "react"
 import { signIn } from "next-auth/react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Button, Input, Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui-components"
 
 export default function LoginPage() {
-    const router = useRouter()
     const searchParams = useSearchParams()
     const message = searchParams.get("message")
     const [email, setEmail] = useState("")
@@ -21,7 +20,7 @@ export default function LoginPage() {
         setError("")
 
         try {
-            const res = await signIn("credentials", {
+            await signIn("credentials", {
                 redirect: true,
                 callbackUrl: "/dashboard",
                 email,

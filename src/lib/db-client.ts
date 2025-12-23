@@ -9,7 +9,7 @@ const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 const supabase = createClient(supabaseUrl, supabaseKey)
 
 // Helper to ensure we return matching types
-function mapUser(data: any): User {
+function mapUser(data: any): User { // eslint-disable-line @typescript-eslint/no-explicit-any
     return {
         ...data,
         // Ensure optional fields are handled if missing
@@ -19,7 +19,7 @@ function mapUser(data: any): User {
 class SupabaseClient {
     public user = {
         findUnique: async ({ where }: { where: { email: string } }) => {
-            const { data, error } = await supabase
+            const { data, error } = await supabase // eslint-disable-line @typescript-eslint/no-explicit-any
                 .from('users')
                 .select('*')
                 .eq('email', where.email)
@@ -36,10 +36,10 @@ class SupabaseClient {
 
             return data as User
         },
-        create: async ({ data }: { data: any }) => {
+        create: async ({ data }: { data: any }) => { // eslint-disable-line @typescript-eslint/no-explicit-any
             // Check for App Master email during creation
             const role = data.email === 'ivan@pixelimperfect.io' ? 'APP_MASTER' : 'USER'
-            const { data: newUser, error } = await supabase
+            const { data: newUser, error } = await supabase // eslint-disable-line @typescript-eslint/no-explicit-any
                 .from('users')
                 .insert({
                     name: data.name,
@@ -57,8 +57,8 @@ class SupabaseClient {
             if (error) throw error
             return newUser as User
         },
-        update: async ({ where, data }: { where: { email: string }, data: any }) => {
-            const { data: updatedUser, error } = await supabase
+        update: async ({ where, data }: { where: { email: string }, data: any }) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+            const { data: updatedUser, error } = await supabase // eslint-disable-line @typescript-eslint/no-explicit-any
                 .from('users')
                 .update({
                     ...data,
@@ -154,9 +154,9 @@ class SupabaseClient {
     };
 
     public bug = {
-        create: async ({ data }: { data: any }) => {
+        create: async ({ data }: { data: any }) => { // eslint-disable-line @typescript-eslint/no-explicit-any
             console.log("[DEBUG] Supabase Insert Data (snake_case):", data)
-            const { data: newBug, error } = await supabase
+            const { data: newBug, error } = await (supabase as any) // eslint-disable-line @typescript-eslint/no-explicit-any
                 .from('bugs')
                 .insert({
                     "reporter_id": data.reporterId,
