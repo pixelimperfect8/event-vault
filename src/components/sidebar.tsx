@@ -23,6 +23,12 @@ interface SidebarProps {
 export function Sidebar({ events, user, pendingBugCount = 0 }: SidebarProps) {
     const pathname = usePathname()
     const [showWizard, setShowWizard] = useState(false)
+    const [searchQuery, setSearchQuery] = useState("")
+
+    const filteredEvents = events.filter(evt =>
+        evt.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        evt.clientName?.toLowerCase().includes(searchQuery.toLowerCase())
+    )
 
     return (
         <>
@@ -39,7 +45,9 @@ export function Sidebar({ events, user, pendingBugCount = 0 }: SidebarProps) {
                         <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
                         <Input
                             placeholder="Search events..."
-                            className="pl-9 h-10 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-100 transition-all text-sm rounded-xl"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="pl-9 h-10 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-100 transition-all text-sm"
                         />
                     </div>
                 </div>
@@ -113,7 +121,7 @@ export function Sidebar({ events, user, pendingBugCount = 0 }: SidebarProps) {
                     <div>
                         <div className="flex items-center justify-between px-2 mb-3">
                             <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
-                                Recent Events
+                                {searchQuery ? 'Search Results' : 'Recent Events'}
                             </h3>
                             <Button
                                 variant="ghost"
@@ -125,13 +133,13 @@ export function Sidebar({ events, user, pendingBugCount = 0 }: SidebarProps) {
                             </Button>
                         </div>
 
-                        {events.length === 0 ? (
+                        {filteredEvents.length === 0 ? (
                             <div className="px-2 py-6 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200">
                                 <p className="text-[10px] font-medium text-slate-400">No events found</p>
                             </div>
                         ) : (
                             <nav className="space-y-1">
-                                {events.map(evt => (
+                                {filteredEvents.map(evt => (
                                     <Link key={evt.id} href={`/dashboard/events/${evt.id}`}>
                                         <Button
                                             variant="ghost"

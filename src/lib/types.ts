@@ -48,12 +48,12 @@ export interface Contract {
     title: string;
     status: 'DRAFT' | 'FINAL' | 'SIGNED';
     versions: ContractVersion[];
-    createdAt: string;
-    updatedAt: string;
+    createdAt: string | Date;
+    updatedAt: string | Date;
 }
 
 export interface ContractVersion {
-    version: number;
-    file: string;
-    date: string;
+    id: string;
+    versionNumber: number;
+    filePath: string;
 }

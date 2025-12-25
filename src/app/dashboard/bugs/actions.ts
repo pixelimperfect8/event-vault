@@ -57,3 +57,23 @@ export async function resolveBug(bugId: string) {
         throw error
     }
 }
+
+export async function unresolveBug(bugId: string) {
+    const session = await getServerSession(authOptions)
+    if (!session?.user || session.user.role !== 'APP_MASTER') {
+        throw new Error("Unauthorized")
+    }
+
+    try {
+        const updatedBug = await db.bug.update({
+            where: { id: bugId },
+            data: { status: 'PENDING' }
+        })
+        revalidatePath("/dashboard/bugs")
+        console.log(`[AI-UNRESOLVE] Bug ${bugId} marked as PENDING.`)
+        return updatedBug
+    } catch (error) {
+        console.error("Failed to unresolve bug:", error)
+        throw error
+    }
+}

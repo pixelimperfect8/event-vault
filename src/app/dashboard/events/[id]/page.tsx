@@ -25,9 +25,13 @@ export default async function EventPage({ params }: PageProps) {
         return <div className="p-8">Access denied</div>
     }
 
-    const contracts = await db.contract.findMany({ where: { eventId: event.id } })
+    const contracts = await db.contract.findMany({
+        where: { eventId: event.id },
+        // include: { versions: true },
+        // orderBy: { createdAt: 'desc' }
+    })
     return <EventClientView
-        event={{ ...event, role: user.role } as any} // eslint-disable-line @typescript-eslint/no-explicit-any
+        event={{ ...JSON.parse(JSON.stringify(event)), role: "OWNER" }}
         contracts={contracts}
     />
 }

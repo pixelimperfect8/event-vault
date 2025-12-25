@@ -2,10 +2,11 @@
 
 import { useState } from "react"
 import { Card, CardContent, CardHeader, Button } from "@/components/ui-components"
-import { Bug, Clock, User, Hash, CheckCircle2, ChevronRight } from "lucide-react"
+import { Bug, Clock, User, Hash, CheckCircle2, ChevronRight, Search } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { resolveBug } from "./actions"
+import { resolveBug, unresolveBug } from "./actions"
 import { Bug as BugType } from "@/lib/types"
+import { Input } from "@/components/ui-components"
 
 interface BugListClientProps {
     bugs: BugType[]
@@ -15,10 +16,16 @@ export function BugListClient({ bugs: initialBugs }: BugListClientProps) {
     const [bugs, setBugs] = useState<BugType[]>(initialBugs)
     const [resolving, setResolving] = useState<string | null>(null)
     const [filter, setFilter] = useState<'ALL' | 'PENDING' | 'FIXED'>('ALL')
+    const [searchTerm, setSearchTerm] = useState("")
 
-    const filteredBugs = bugs.filter(bug =>
-        filter === 'ALL' || bug.status === filter
-    )
+    const filteredBugs = bugs.filter(bug => {
+        const matchesFilter = filter === 'ALL' || bug.status === filter
+        const matchesSearch =
+            bug.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            bug.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            bug.element_selector.toLowerCase().includes(searchTerm.toLowerCase())
+        return matchesFilter && matchesSearch
+    })
 
     const handleResolve = async (id: string) => {
         setResolving(id)
@@ -33,23 +40,47 @@ export function BugListClient({ bugs: initialBugs }: BugListClientProps) {
         }
     }
 
+    const handleUnresolve = async (id: string) => {
+        setResolving(id)
+        try {
+            await unresolveBug(id)
+            setBugs(prev => prev.map(b => b.id === id ? { ...b, status: 'PENDING' } : b))
+        } catch (err) {
+            console.error(err)
+            alert("Failed to unresolve bug")
+        } finally {
+            setResolving(null)
+        }
+    }
+
     return (
         <div className="space-y-6">
-            <div className="flex items-center gap-2 bg-slate-100/50 p-1.5 rounded-2xl w-fit border border-slate-200 shadow-sm">
-                {(['ALL', 'PENDING', 'FIXED'] as const).map((f) => (
-                    <button
-                        key={f}
-                        onClick={() => setFilter(f)}
-                        className={cn(
-                            "px-4 py-2 text-xs font-bold rounded-xl transition-all",
-                            filter === f
-                                ? "bg-white text-indigo-600 shadow-sm border border-slate-200"
-                                : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
-                        )}
-                    >
-                        {f}
-                    </button>
-                ))}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-3xl border border-slate-200 shadow-sm">
+                <div className="flex items-center gap-2 bg-slate-100/50 p-1 rounded-2xl w-fit border border-slate-200">
+                    {(['ALL', 'PENDING', 'FIXED'] as const).map((f) => (
+                        <button
+                            key={f}
+                            onClick={() => setFilter(f)}
+                            className={cn(
+                                "px-4 py-2 text-xs font-bold rounded-xl transition-all min-w-[100px]",
+                                filter === f
+                                    ? "bg-white text-indigo-600 shadow-sm border border-slate-200"
+                                    : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
+                            )}
+                        >
+                            {f === 'FIXED' ? 'RESOLVED' : f}
+                        </button>
+                    ))}
+                </div>
+                <div className="relative flex-1 max-w-md">
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                    <Input
+                        placeholder="Search bugs by ID or description..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="pl-10 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-100 transition-all"
+                    />
+                </div>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -71,7 +102,7 @@ export function BugListClient({ bugs: initialBugs }: BugListClientProps) {
                                     bug.status === 'PENDING' ? "bg-orange-500 animate-pulse" : "bg-green-500"
                                 )} />
                                 <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                                    {bug.status}
+                                    {bug.status === 'FIXED' ? 'RESOLVED' : bug.status}
                                 </span>
                             </div>
                             <div className="flex items-center gap-2 text-[10px] font-mono text-slate-400 group-hover:text-slate-600 transition-colors">
@@ -102,6 +133,20 @@ export function BugListClient({ bugs: initialBugs }: BugListClientProps) {
                                             ) : (
                                                 <CheckCircle2 className="h-4 w-4" />
                                             )}
+                                        </Button>
+                                    )}
+                                    {bug.status === 'FIXED' && (
+                                        <Button
+                                            size="sm"
+                                            variant="outline"
+                                            className="h-8 px-3 rounded-xl border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition-all font-bold text-[10px]"
+                                            onClick={() => handleUnresolve(bug.id)}
+                                            disabled={resolving === bug.id}
+                                        >
+                                            {resolving === bug.id ? (
+                                                <div className="h-3 w-3 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin mr-2" />
+                                            ) : null}
+                                            Mark as Pending
                                         </Button>
                                     )}
                                 </div>

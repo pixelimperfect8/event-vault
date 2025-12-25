@@ -84,23 +84,20 @@ model Event {
   activities Activity[]
 }
 
-enum ContractStatus {
-  DRAFT
-  FINAL
-  SIGNED
-}
+
 
 model Contract {
-  id        String   @id @default(cuid())
-  title     String
-  status    ContractStatus @default(DRAFT)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @default(cuid())
+  title      String
+  status     String         @default("DRAFT")
+  signedDate DateTime?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
   
-  eventId   String
-  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  eventId    String
+  event      Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
   
-  versions  ContractVersion[]
+  versions   ContractVersion[]
 }
 
 model ContractVersion {

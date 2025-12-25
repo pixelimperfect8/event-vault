@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from "react"
+import Link from "next/link"
 import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui-components"
 import { PlusCircle, FileText, CalendarDays } from "lucide-react"
 import { EventWizard } from "@/components/events/EventWizard"
@@ -62,29 +63,31 @@ export function DashboardClient({ events, stats }: DashboardClientProps) {
             ) : (
                 <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                     {events.map(evt => (
-                        <Card key={evt.id} className="hover:bg-slate-50 transition-colors cursor-pointer group">
-                            <CardHeader>
-                                <div className="flex justify-between items-start">
-                                    <CardTitle className="text-lg group-hover:text-indigo-600 transition-colors">{evt.name}</CardTitle>
-                                    <span className={cn(
-                                        "px-2 py-0.5 rounded text-[10px] font-bold uppercase",
-                                        evt.status === 'PLANNING' ? "bg-blue-100 text-blue-700" :
-                                            evt.status === 'ACTIVE' ? "bg-green-100 text-green-700" :
-                                                evt.status === 'DRAFT' ? "bg-slate-100 text-slate-600" :
-                                                    "bg-slate-100 text-slate-700"
-                                    )}>
-                                        {evt.status}
-                                    </span>
-                                </div>
-                                <p className="text-xs text-slate-500">{evt.clientName || 'No Client'}</p>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="text-sm text-slate-600">
-                                    {evt.venueName && <div className="flex items-center gap-1 mb-1"><span className="text-slate-400">@</span> {evt.venueName}</div>}
-                                    {evt.startDate && <div className="flex items-center gap-1"><span className="text-slate-400">On</span> {evt.startDate}</div>}
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <Link key={evt.id} href={`/dashboard/events/${evt.id}`} className="block">
+                            <Card className="hover:bg-slate-50 transition-colors cursor-pointer group h-full">
+                                <CardHeader>
+                                    <div className="flex justify-between items-start">
+                                        <CardTitle className="text-lg group-hover:text-indigo-600 transition-colors">{evt.name}</CardTitle>
+                                        <span className={cn(
+                                            "px-2 py-0.5 rounded text-[10px] font-bold uppercase",
+                                            evt.status === 'PLANNING' ? "bg-blue-100 text-blue-700" :
+                                                evt.status === 'ACTIVE' ? "bg-green-100 text-green-700" :
+                                                    evt.status === 'DRAFT' ? "bg-slate-100 text-slate-600" :
+                                                        "bg-slate-100 text-slate-700"
+                                        )}>
+                                            {evt.status}
+                                        </span>
+                                    </div>
+                                    <p className="text-xs text-slate-500">{evt.clientName || 'No Client'}</p>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="text-sm text-slate-600">
+                                        {evt.venueName && <div className="flex items-center gap-1 mb-1"><span className="text-slate-400">@</span> {evt.venueName}</div>}
+                                        {evt.startDate && <div className="flex items-center gap-1"><span className="text-slate-400">On</span> {evt.startDate}</div>}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </Link>
                     ))}
                 </div>
             )}
