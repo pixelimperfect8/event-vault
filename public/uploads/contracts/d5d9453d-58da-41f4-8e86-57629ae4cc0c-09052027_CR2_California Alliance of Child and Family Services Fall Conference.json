@@ -1,0 +1,114 @@
+{
+  "summary": "This contract outlines the agreement between Anaheim Marriott and the California Alliance of Child and Family Services for their Fall Conference in 2027, including guest room commitments, rates, and event space. It details the responsibilities of both parties regarding room reservations, billing, and potential cancellations.",
+  "important_dates": [
+    {
+      "date": "2025-12-19",
+      "event": "Deadline to sign for Triple Marriott Bonvoy Events Points"
+    },
+    {
+      "date": "2026-02-02",
+      "event": "Advance Payment of $25,000.00 due"
+    },
+    {
+      "date": "2026-06-01",
+      "event": "Advance Payment of $50,000.00 due"
+    },
+    {
+      "date": "2026-09-28",
+      "event": "Date after which cancellation fees increase"
+    },
+    {
+      "date": "2026-10-05",
+      "event": "Advance Payment of $50,000.00 due"
+    },
+    {
+      "date": "2027-02-01",
+      "event": "Advance Payment of $75,000.00 due"
+    },
+    {
+      "date": "2027-03-29",
+      "event": "Date after which cancellation fees increase"
+    },
+    {
+      "date": "2027-06-01",
+      "event": "Advance Payment of $75,000.00 due"
+    },
+    {
+      "date": "2027-08-16",
+      "event": "Cut-Off Date for Reservations and Final Advance Payment"
+    },
+    {
+      "date": "2027-09-06",
+      "event": "Official Program Start Date"
+    },
+    {
+      "date": "2027-09-11",
+      "event": "Official Program End Date"
+    }
+  ],
+  "costs": [
+    {
+      "description": "Single Room Rate",
+      "amount": "$259.00"
+    },
+    {
+      "description": "Double Room Rate",
+      "amount": "$259.00"
+    },
+    {
+      "description": "Triple Room Rate",
+      "amount": "$279.00"
+    },
+    {
+      "description": "Quad Room Rate",
+      "amount": "$299.00"
+    },
+    {
+      "description": "Additional Person",
+      "amount": "$20.00"
+    },
+    {
+      "description": "Presidential Suite Connector",
+      "amount": "$259.00"
+    },
+    {
+      "description": "Loft Suite",
+      "amount": "$259.00"
+    },
+    {
+      "description": "Studio Suite",
+      "amount": "$259.00"
+    },
+    {
+      "description": "Staff Room",
+      "amount": "$181.30"
+    },
+    {
+      "description": "Minimum Banquet Food & Beverage Revenue",
+      "amount": "$250000.00"
+    },
+    {
+      "description": "Liquidated Damages for Cancellation (From Date of Signed Agreement to Monday, September 28, 2026)",
+      "amount": "$275997.00"
+    },
+    {
+      "description": "Liquidated Damages for Cancellation (From Tuesday, September 29, 2026 to Monday, March 29, 2027)",
+      "amount": "$413995.50"
+    },
+    {
+      "description": "Liquidated Damages for Cancellation (From Tuesday, March 30, 2027 to Arrival Date)",
+      "amount": "$551994.00"
+    }
+  ],
+  "risks": [
+    "Attrition charges if actual room usage is less than 85% of the Room Night Commitment.",
+    "Attrition charges if actual banquet food and beverage revenue is less than $250,000.00.",
+    "Cancellation fees based on a sliding scale if the event is cancelled.",
+    "Hotel may adjust concessions and function space if Room Night Commitment is reduced by more than 15%.",
+    "Early departure fees may be charged to attendees.",
+    "Hotel room rates and services are subject to applicable State and Local fees and taxes, currently 15% Occupancy Tax, 2% Anaheim Tourism Improvement District Assessment, and California State Tourism Fee of $0.94 and $0.14 Tax per room night. These fees and taxes are subject to change without prior notice.",
+    "Potential damage to function space during the event will be the responsibility of the California Alliance of Child and Family Services.",
+    "Risk of phishing attempts impersonating Hotel employees.",
+    "Performance of the agreement is subject to termination without liability due to circumstances beyond control, such as acts of God, war, acts of terrorism, government regulations, disaster, strikes, civil disorder, or curtailment of transportation facilities."
+  ]
+}

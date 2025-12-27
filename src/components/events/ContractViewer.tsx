@@ -60,7 +60,7 @@ export function AIInsightsPanel({ analysis, isLoading }: AIInsightsPanelProps) {
                         </h4>
                         <ul className="space-y-2">
                             {risks.map((risk: string, i: number) => (
-                                <li key={i} className="text-xs bg-red-50 text-red-700 p-2 rounded-lg border border-red-100">
+                                <li key={i} className="text-xs bg-red-50/80 text-red-700 p-4 rounded-[10px] border border-red-100/50">
                                     {risk}
                                 </li>
                             ))}
@@ -107,27 +107,38 @@ interface ContractViewerProps {
     onClose: () => void
 }
 
-import { getContractAnalysis } from "@/app/dashboard/events/contract-actions"
+import { getContractAnalysis, getDocxHtml } from "@/app/dashboard/events/contract-actions"
 import { useEffect } from "react"
 
 export function ContractViewer({ contract, onClose }: ContractViewerProps) {
     const fileUrl = contract.versions[contract.versions.length - 1]?.filePath;
     const [analysis, setAnalysis] = useState<any>(null)
     const [loading, setLoading] = useState(true)
+    const [docxHtml, setDocxHtml] = useState<string | null>(null)
+
+    const isDocx = fileUrl?.toLowerCase().endsWith('.docx')
+    const isPdf = fileUrl?.toLowerCase().endsWith('.pdf')
 
     useEffect(() => {
         let mounted = true
-        async function loadAnalysis() {
+        async function loadData() {
             if (!fileUrl) {
                 if (mounted) setLoading(false)
                 return
             }
             try {
-                // Poll for analysis if it's missing (it might be processing)
-                // For now, just one fetch
+                // Load analysis
                 const data = await getContractAnalysis(fileUrl)
                 if (mounted && data) {
                     setAnalysis(data)
+                }
+
+                // Load DOCX HTML if applicable
+                if (isDocx) {
+                    const html = await getDocxHtml(fileUrl)
+                    if (mounted && html) {
+                        setDocxHtml(html)
+                    }
                 }
             } catch (e) {
                 console.error(e)
@@ -135,9 +146,9 @@ export function ContractViewer({ contract, onClose }: ContractViewerProps) {
                 if (mounted) setLoading(false)
             }
         }
-        loadAnalysis()
+        loadData()
         return () => { mounted = false }
-    }, [fileUrl])
+    }, [fileUrl, isDocx])
 
     return (
         <div className="fixed inset-0 z-50 bg-slate-900/95 backdrop-blur-sm flex items-center justify-center p-4">
@@ -156,10 +167,20 @@ export function ContractViewer({ contract, onClose }: ContractViewerProps) {
                     <AIInsightsPanel analysis={analysis} isLoading={loading && !analysis} />
                 </div>
 
-                {/* Right Panel: PDF Viewer (2/3) */}
-                <div className="flex-1 bg-slate-100 h-full relative">
-                    {fileUrl && fileUrl.toLowerCase().endsWith('.pdf') ? (
+                {/* Right Panel: Document Viewer (2/3) */}
+                <div className="flex-1 bg-slate-100 h-full relative overflow-auto">
+                    {isPdf && fileUrl ? (
                         <iframe src={fileUrl} className="w-full h-full" title="Contract PDF" />
+                    ) : isDocx && docxHtml ? (
+                        <div
+                            className="p-8 prose prose-slate max-w-none bg-white min-h-full"
+                            dangerouslySetInnerHTML={{ __html: docxHtml }}
+                        />
+                    ) : isDocx && loading ? (
+                        <div className="flex items-center justify-center h-full text-slate-500 gap-2">
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600"></div>
+                            <span>Loading document...</span>
+                        </div>
                     ) : fileUrl ? (
                         <div className="flex flex-col items-center justify-center h-full text-slate-500 gap-4">
                             <FileText className="h-16 w-16 text-slate-300" />

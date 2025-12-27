@@ -1,0 +1,15 @@
+{
+  "summary": "This contract is a Buyer Contingency Removal form, indicating the buyer is removing certain contingencies from the purchase agreement. By signing this form, the buyer may lose their deposit if they don't close escrow, even if they are not satisfied with the property or loan approval.",
+  "important_dates": [
+    {
+      "date": "2025-09-10",
+      "event": "Date the contingency removal was signed"
+    }
+  ],
+  "costs": [],
+  "risks": [
+    "Buyer assumes all liability, responsibility, and expense for repairs, corrections, or inability to obtain financing once contingencies are removed.",
+    "Buyer may not be entitled to a return of their deposit if they do not close escrow after removing contingencies.",
+    "Form is only valid if both Buyer and Seller agree to requests made on any attached forms (e.g., Request for Repairs, Addendum, Amendment to Existing Agreement)."
+  ]
+}

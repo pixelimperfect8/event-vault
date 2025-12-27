@@ -119,23 +119,35 @@ class SupabaseClient {
     };
 
     public contract = {
-        findMany: async ({ where }: { where: { eventId: string } }) => {
-            const { data, error } = await supabase
+        findMany: async ({ where, include, orderBy }: { where: { eventId: string }, include?: any, orderBy?: any }) => {
+            let query = supabase
                 .from('contracts')
                 .select('*')
                 .eq('eventId', where.eventId)
 
+            if (orderBy?.createdAt === 'desc') {
+                query = query.order('createdAt', { ascending: false })
+            }
+
+            const { data, error } = await query
+
             if (error) return []
             return data as Contract[]
         },
-        create: async ({ data }: { data: any }) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+        create: async ({ data, include }: { data: any, include?: any }) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+            // Handle nested versions.create syntax
+            let versions: any[] = []
+            if (data.versions?.create) {
+                versions = [data.versions.create]
+            }
+
             const { data: newContract, error } = await supabase
                 .from('contracts')
                 .insert({
                     "eventId": data.eventId,
                     title: data.title,
-                    status: 'DRAFT',
-                    versions: [], // JSON default
+                    status: data.status || 'DRAFT',
+                    versions: versions, // Store versions as JSON array
                     "updatedAt": new Date().toISOString(),
                     "createdAt": new Date().toISOString()
                 })
