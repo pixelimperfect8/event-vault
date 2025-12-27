@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 "use server"
 
 import { db } from "@/lib/db-client"
@@ -64,7 +65,7 @@ export async function uploadContract(formData: FormData) {
 
     // Trigger analysis
     try {
-        await analyzeContract(contract.id, filePath, publicPath)
+        await analyzeContract(contract.id, filePath)
     } catch (e) {
         console.error("Analysis failed:", e)
     }
@@ -73,7 +74,7 @@ export async function uploadContract(formData: FormData) {
     return contract
 }
 
-export async function analyzeContract(contractId: string, filePath: string, publicPath: string) {
+export async function analyzeContract(contractId: string, filePath: string) {
     console.log(`[AI] Analyzing contract ${contractId}...`)
     console.log(`[AI] File path: ${filePath}`)
 
@@ -90,7 +91,7 @@ export async function analyzeContract(contractId: string, filePath: string, publ
 
                 text = await new Promise((resolve, reject) => {
                     pdfParser.on("pdfParser_dataError", (errData: any) => reject(new Error(errData.parserError)))
-                    pdfParser.on("pdfParser_dataReady", (pdfData: any) => {
+                    pdfParser.on("pdfParser_dataReady", () => {
                         resolve(pdfParser.getRawTextContent())
                     })
                     pdfParser.loadPDF(filePath)
@@ -176,7 +177,7 @@ export async function getContractAnalysis(publicPath: string) {
         const jsonPath = join(process.cwd(), "public", publicPath.replace(/\.(pdf|docx|doc)$/i, ".json"))
         const fileContent = await readFile(jsonPath, "utf-8")
         return JSON.parse(fileContent)
-    } catch (error) {
+    } catch {
         return null
     }
 }
